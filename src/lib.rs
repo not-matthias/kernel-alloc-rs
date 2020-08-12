@@ -1,3 +1,5 @@
+#![doc(include = "../README.md")]
+#![feature(external_doc)]
 #![no_std]
 
 use crate::nt::{ExAllocatePool, ExFreePool, PoolType};
