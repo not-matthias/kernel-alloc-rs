@@ -1,4 +1,6 @@
 ![Rust](https://github.com/not-matthias/kernel-alloc-rs/workflows/Rust/badge.svg)
+[![crates.io](https://img.shields.io/crates/v/kernel-alloc.svg)](https://crates.io/crates/kernel-alloc)
+[![docs.rs](https://docs.rs/kernel-alloc/badge.svg)](https://docs.rs/kernel-alloc)
 
 ## Why?
 
