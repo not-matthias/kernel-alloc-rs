@@ -1,3 +1,5 @@
+![Rust](https://github.com/not-matthias/kernel-alloc-rs/workflows/Rust/badge.svg)
+
 ## Why?
 
 Rust has many useful abstractions and utils that require heap allocations. `String`, `Vec` and `Box` are some of them. To be able to use them, we need to allocate memory at runtime, which requires a custom allocator. 
