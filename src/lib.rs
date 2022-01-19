@@ -18,7 +18,10 @@
 #![no_std]
 #![feature(alloc_error_handler)]
 
+extern crate alloc;
+
 use crate::nt::{ExAllocatePool, ExFreePool, PoolType};
+use alloc::alloc::handle_alloc_error;
 use core::alloc::{GlobalAlloc, Layout};
 
 #[doc(hidden)] pub mod nt;
@@ -29,9 +32,8 @@ pub struct KernelAlloc;
 unsafe impl GlobalAlloc for KernelAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         let pool = ExAllocatePool(PoolType::NonPagedPool, layout.size());
-
         if pool.is_null() {
-            panic!("[kernel-alloc] failed to allocate pool.");
+            handle_alloc_error(layout);
         }
 
         pool as _
@@ -42,5 +44,5 @@ unsafe impl GlobalAlloc for KernelAlloc {
 
 #[alloc_error_handler]
 fn alloc_error(layout: Layout) -> ! {
-    panic!("{:?} alloc memory error", layout);
+    panic!("allocation failed: {:?}", layout);
 }
