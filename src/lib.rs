@@ -20,18 +20,25 @@
 
 extern crate alloc;
 
-use crate::nt::{ExAllocatePool, ExFreePool, PoolType};
+use crate::nt::{ExFreePool, PoolType};
 use alloc::alloc::handle_alloc_error;
 use core::alloc::{GlobalAlloc, Layout};
 
 #[doc(hidden)] pub mod nt;
+
+#[cfg(feature = "pool-tag")]
+const POOL_TAG: u32 = u32::from_ne_bytes(*b"tsuR");
 
 /// The global kernel allocator structure.
 pub struct KernelAlloc;
 
 unsafe impl GlobalAlloc for KernelAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
-        let pool = ExAllocatePool(PoolType::NonPagedPool, layout.size());
+        #[cfg(feature = "pool-tag")]
+        let pool = nt::ExAllocatePoolWithTag(PoolType::NonPagedPool, layout.size(), POOL_TAG);
+
+        #[cfg(not(feature = "pool-tag"))]
+        let pool = nt::ExAllocatePool(PoolType::NonPagedPool, layout.size());
         if pool.is_null() {
             handle_alloc_error(layout);
         }
