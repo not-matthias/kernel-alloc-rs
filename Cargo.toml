@@ -9,6 +9,7 @@ repository = "https://github.com/not-matthias/kernel-alloc-rs"
 license-file = "LICENSE"
 
 [dependencies]
+winapi = { git = "https://github.com/Trantect/winapi-rs.git", branch = "feature/km", default-features = false, features = ["wdm", "ntstatus"] }
 
 [features]
 default = []
