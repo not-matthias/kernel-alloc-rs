@@ -66,7 +66,9 @@ unsafe impl GlobalAlloc for KernelAlloc {
         pool as _
     }
 
-    unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) { ExFreePool(ptr as _); }
+    unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
+        ExFreePool(ptr as _);
+    }
 }
 
 unsafe impl Allocator for PhysicalAllocator {
@@ -97,7 +99,9 @@ unsafe impl Allocator for PhysicalAllocator {
         }
     }
 
-    unsafe fn deallocate(&self, ptr: NonNull<u8>, _layout: Layout) { MmFreeContiguousMemory(ptr.cast().as_ptr()); }
+    unsafe fn deallocate(&self, ptr: NonNull<u8>, _layout: Layout) {
+        MmFreeContiguousMemory(ptr.cast().as_ptr());
+    }
 }
 
 #[alloc_error_handler]
