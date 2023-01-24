@@ -1,7 +1,4 @@
-use winapi::shared::{
-    basetsd::SIZE_T,
-    ntdef::{PHYSICAL_ADDRESS, PVOID},
-};
+use winapi::shared::ntdef::PHYSICAL_ADDRESS;
 
 #[repr(C)]
 pub enum PoolType {
@@ -15,10 +12,10 @@ extern "system" {
     pub fn ExAllocatePoolWithTag(pool_type: PoolType, number_of_bytes: usize, tag: u32) -> *mut u64;
     pub fn ExFreePool(pool: u64);
     pub fn MmAllocateContiguousMemorySpecifyCacheNode(
-        NumberOfBytes: SIZE_T, LowestAcceptableAddress: PHYSICAL_ADDRESS, HighestAcceptableAddress: PHYSICAL_ADDRESS,
+        NumberOfBytes: usize, LowestAcceptableAddress: PHYSICAL_ADDRESS, HighestAcceptableAddress: PHYSICAL_ADDRESS,
         BoundaryAddressMultiple: PHYSICAL_ADDRESS, CacheType: MEMORY_CACHING_TYPE, PreferredNode: NODE_REQUIREMENT,
-    ) -> PVOID;
-    pub fn MmFreeContiguousMemory(BaseAddress: PVOID);
+    ) -> *mut u64;
+    pub fn MmFreeContiguousMemory(BaseAddress: *mut u64);
 }
 
 pub const MM_ANY_NODE_OK: u32 = 0x80000000;
