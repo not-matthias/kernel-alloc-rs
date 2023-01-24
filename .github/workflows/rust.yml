@@ -23,7 +23,7 @@ jobs:
         toolchain: nightly
         target: x86_64-pc-windows-gnu
         override: true
-        components: rustfmt, clippy
+        components: rustfmt, clippy, rust-src
 
     - name: Run cargo fmt
       uses: actions-rs/cargo@v1
