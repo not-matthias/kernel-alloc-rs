@@ -29,12 +29,12 @@ jobs:
       # continue-on-error: true
       with:
         command: fmt
-        args: --all -- --check
+        args: --target x86_64-pc-windows-gnu -Zbuild-std --all -- --check
 
     - name: Run cargo clippy
       uses: actions-rs/cargo@v1
       # continue-on-error: true
       with:
         command: clippy
-        args: -- -D warnings
+        args: --target x86_64-pc-windows-gnu -Zbuild-std  -- -D warnings 
 
