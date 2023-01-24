@@ -21,6 +21,9 @@
 //!
 //! ```rust
 //! use kernel_alloc::PhysicalAllocator;
+//!
+//! #[global_allocator]
+//! static GLOBAL: PhysicalAllocator = PhysicalAllocator;
 //! ```
 
 #![no_std]
