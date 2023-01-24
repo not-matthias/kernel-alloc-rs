@@ -25,4 +25,7 @@ Add the following to your code to define new physical allocator:
 
 ```rust
 use kernel_alloc::PhysicalAllocator;
+
+#[global_allocator]
+static GLOBAL: PhysicalAllocator = PhysicalAllocator;
 ```
