@@ -29,3 +29,8 @@ use kernel_alloc::PhysicalAllocator;
 #[global_allocator]
 static GLOBAL: PhysicalAllocator = PhysicalAllocator;
 ```
+
+## Credits / References
+
+- https://www.vergiliusproject.com/
+- @not-matthias, @jessiep_, @memN0ps
