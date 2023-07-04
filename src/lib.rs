@@ -32,13 +32,16 @@
 
 extern crate alloc;
 
-use crate::nt::{ExFreePool, PoolType, MEMORY_CACHING_TYPE::MmCached};
+use crate::nt::{ExFreePool, MEMORY_CACHING_TYPE::MmCached};
 use alloc::alloc::handle_alloc_error;
 use core::{
     alloc::{AllocError, Allocator, GlobalAlloc, Layout},
     ptr::NonNull,
 };
-use nt::{MmAllocateContiguousMemorySpecifyCacheNode, MmFreeContiguousMemory, MM_ANY_NODE_OK};
+use nt::{
+    MmAllocateContiguousMemorySpecifyCacheNode, MmFreeContiguousMemory, NonPagedPool,
+    MM_ANY_NODE_OK,
+};
 use winapi::shared::ntdef::PHYSICAL_ADDRESS;
 
 #[doc(hidden)] pub mod nt;
@@ -55,10 +58,10 @@ pub struct PhysicalAllocator;
 unsafe impl GlobalAlloc for KernelAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         #[cfg(feature = "pool-tag")]
-        let pool = nt::ExAllocatePoolWithTag(PoolType::NonPagedPool, layout.size(), POOL_TAG);
+        let pool = nt::ExAllocatePoolWithTag(NonPagedPool, layout.size(), POOL_TAG);
 
         #[cfg(not(feature = "pool-tag"))]
-        let pool = nt::ExAllocatePool(PoolType::NonPagedPool, layout.size());
+        let pool = nt::ExAllocatePool(NonPagedPool, layout.size());
         if pool.is_null() {
             handle_alloc_error(layout);
         }
