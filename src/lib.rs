@@ -6,7 +6,7 @@
 //!
 //! ## Example
 //!
-//! Add the following to your code to define new global allocator:
+//! Add the following to your code to define a new global allocator:
 //!
 //! ```rust
 //! use kernel_alloc::KernelAlloc;
@@ -17,7 +17,7 @@
 //!
 //! ## Example
 //!
-//! Add the following to your code to define new physical allocator:
+//! Add the following to your code to define a new physical allocator:
 //!
 //! ```rust
 //! use kernel_alloc::PhysicalAllocator;
@@ -107,7 +107,18 @@ unsafe impl Allocator for PhysicalAllocator {
     }
 }
 
-#[alloc_error_handler]
-fn alloc_error(layout: Layout) -> ! {
-    panic!("allocation failed: {:?}", layout);
+unsafe impl Allocator for KernelAlloc {
+    fn allocate(&self, layout: Layout) -> Result<NonNull<[u8]>, AllocError> {
+        let memory = unsafe { nt::ExAllocatePool(NonPagedPool, layout.size()) } as *mut u8;
+        if memory.is_null() {
+            Err(AllocError)
+        } else {
+            let slice = unsafe { core::slice::from_raw_parts_mut(memory, layout.size()) };
+            Ok(unsafe { NonNull::new_unchecked(slice) })
+        }
+    }
+
+    unsafe fn deallocate(&self, ptr: NonNull<u8>, _layout: Layout) {
+        ExFreePool(ptr.cast().as_ptr() as *mut u64 as _);
+    }
 }
