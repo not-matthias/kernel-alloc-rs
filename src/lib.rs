@@ -119,6 +119,6 @@ unsafe impl Allocator for KernelAlloc {
     }
 
     unsafe fn deallocate(&self, ptr: NonNull<u8>, _layout: Layout) {
-        ExFreePool(ptr.cast().as_ptr() as *mut u64 as _);
+        ExFreePool(ptr.cast::<u64>().as_ptr() as _);
     }
 }
