@@ -1,6 +1,6 @@
 [package]
 name = "kernel-alloc"
-version = "0.2.2"
+version = "0.2.3"
 description = "Minimalistic Windows Kernel Allocator"
 authors = ["not-matthias <26800596+not-matthias@users.noreply.github.com>"]
 edition = "2021"
