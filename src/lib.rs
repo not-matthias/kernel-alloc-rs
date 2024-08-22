@@ -50,9 +50,11 @@ use winapi::shared::ntdef::PHYSICAL_ADDRESS;
 const POOL_TAG: u32 = u32::from_ne_bytes(*b"tsuR");
 
 /// The global kernel allocator structure.
+#[derive(Clone)]
 pub struct KernelAlloc;
 
 /// The physical kernel allocator structure.
+#[derive(Clone)]
 pub struct PhysicalAllocator;
 
 unsafe impl GlobalAlloc for KernelAlloc {
