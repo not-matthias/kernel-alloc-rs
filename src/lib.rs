@@ -59,11 +59,16 @@ pub struct PhysicalAllocator;
 
 unsafe impl GlobalAlloc for KernelAlloc {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        #[cfg(feature = "no-exec")]
+        let pool_type = NonPagedPoolNx;
+        #[cfg(not(feature = "no-exec"))]
+        let pool_type = NonPagedPool;
+
         #[cfg(feature = "pool-tag")]
-        let pool = nt::ExAllocatePoolWithTag(NonPagedPool, layout.size(), POOL_TAG);
+        let pool = nt::ExAllocatePoolWithTag(pool_type, layout.size(), POOL_TAG);
 
         #[cfg(not(feature = "pool-tag"))]
-        let pool = nt::ExAllocatePool(NonPagedPool, layout.size());
+        let pool = nt::ExAllocatePool(pool_type, layout.size());
         if pool.is_null() {
             handle_alloc_error(layout);
         }
@@ -111,7 +116,12 @@ unsafe impl Allocator for PhysicalAllocator {
 
 unsafe impl Allocator for KernelAlloc {
     fn allocate(&self, layout: Layout) -> Result<NonNull<[u8]>, AllocError> {
-        let memory = unsafe { nt::ExAllocatePool(NonPagedPool, layout.size()) } as *mut u8;
+        #[cfg(feature = "no-exec")]
+        let pool_type = NonPagedPoolNx;
+        #[cfg(not(feature = "no-exec"))]
+        let pool_type = NonPagedPool;
+
+        let memory = unsafe { nt::ExAllocatePool(pool_type, layout.size()) } as *mut u8;
         if memory.is_null() {
             Err(AllocError)
         } else {
