@@ -38,10 +38,13 @@ use core::{
     alloc::{AllocError, Allocator, GlobalAlloc, Layout},
     ptr::NonNull,
 };
-use nt::{
-    MmAllocateContiguousMemorySpecifyCacheNode, MmFreeContiguousMemory, NonPagedPool,
-    NonPagedPoolNx, MM_ANY_NODE_OK,
-};
+use nt::{MmAllocateContiguousMemorySpecifyCacheNode, MmFreeContiguousMemory, MM_ANY_NODE_OK};
+
+#[cfg(feature = "no-exec")]
+use nt::NonPagedPoolNx;
+ #[cfg(not(feature = "no-exec"))]
+use nt::NonPagedPool;
+
 use winapi::shared::ntdef::PHYSICAL_ADDRESS;
 
 #[doc(hidden)] pub mod nt;
