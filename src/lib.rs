@@ -40,7 +40,7 @@ use core::{
 };
 use nt::{
     MmAllocateContiguousMemorySpecifyCacheNode, MmFreeContiguousMemory, NonPagedPool,
-    MM_ANY_NODE_OK,
+    NonPagedPoolNx, MM_ANY_NODE_OK,
 };
 use winapi::shared::ntdef::PHYSICAL_ADDRESS;
 
